@@ -1,0 +1,4 @@
+#create features
+./run.feature.sh
+#run classifier
+./run.med.sh
