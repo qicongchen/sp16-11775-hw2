@@ -16,37 +16,18 @@ export PATH=$opensmile_path:$speech_tools_path:$ffmpeg_path:$map_path:$PATH
 export LD_LIBRARY_PATH=$ffmpeg_path/libs:$opensmile_path/lib:$LD_LIBRARY_PATH
 
 echo "#####################################"
-echo "#       MED with MFCC Features      #"
+echo "#       MED with Imtraj Features      #"
 echo "#####################################"
-mkdir -p mfcc_pred
+mkdir -p imtraj_pred
 # iterate over the events
-feat_dim_mfcc=200
+feat_dim_imtraj=32768
 for event in P001 P002 P003; do
   echo "=========  Event $event  ========="
   # now train a svm model
-  python scripts/train_svm.py $event "kmeans/" $feat_dim_mfcc mfcc_pred/svm.$event.model || exit 1;
+  python scripts/train_svm.py $event "imtraj/" "spbof" "sparse" $feat_dim_imtraj imtraj_pred/svm.$event.model || exit 1;
   # apply the svm model to *ALL* the testing videos;
   # output the score of each testing video to a file ${event}_pred 
-  python scripts/test_svm.py mfcc_pred/svm.$event.model "kmeans/" $feat_dim_mfcc mfcc_pred/${event}_pred || exit 1;
+  python scripts/test_svm.py imtraj_pred/svm.$event.model "imtraj/" "spbof" "sparse" $feat_dim_imtraj imtraj_pred/${event}_pred || exit 1;
   # compute the average precision by calling the mAP package
-  ap list/${event}_test_label mfcc_pred/${event}_pred
+  ap list/${event}_test_label imtraj_pred/${event}_pred
 done
-
-echo ""
-echo "#####################################"
-echo "#       MED with ASR Features       #"
-echo "#####################################"
-mkdir -p asr_pred
-# iterate over the events
-feat_dim_asr=983
-for event in P001 P002 P003; do
-  echo "=========  Event $event  ========="
-  # now train a svm model
-  python scripts/train_svm.py $event "asrfeat/" $feat_dim_asr asr_pred/svm.$event.model || exit 1;
-  # apply the svm model to *ALL* the testing videos;
-  # output the score of each testing video to a file ${event}_pred 
-  python scripts/test_svm.py asr_pred/svm.$event.model "asrfeat/" $feat_dim_asr asr_pred/${event}_pred || exit 1;
-  # compute the average precision by calling the mAP package
-  ap list/${event}_test_label asr_pred/${event}_pred
-done
-
