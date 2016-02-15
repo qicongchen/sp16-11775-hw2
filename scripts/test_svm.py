@@ -9,7 +9,7 @@ import sys
 # Apply the SVM model to the testing videos; Output the score for each video
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 7:
         print "Usage: {0} model_file feat_dir feat_suffix feat_type feat_dim output_file".format(sys.argv[0])
         print "model_file -- path of the trained svm file"
         print "feat_dir -- dir of feature files"

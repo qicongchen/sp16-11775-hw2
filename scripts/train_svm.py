@@ -9,7 +9,7 @@ import sys
 # Performs K-means clustering and save the model to a local file
 
 if __name__ == '__main__':
-    if len(sys.argv) != 5:
+    if len(sys.argv) != 7:
         print "Usage: {0} event_name feat_dir feat_suffix feat_type feat_dim output_file".format(sys.argv[0])
         print "event_name -- name of the event (P001, P002 or P003 in Homework 1)"
         print "feat_dir -- dir of feature files"
