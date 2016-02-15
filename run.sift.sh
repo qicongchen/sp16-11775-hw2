@@ -17,7 +17,7 @@ export LD_LIBRARY_PATH=$ffmpeg_path/libs:$opensmile_path/lib:$LD_LIBRARY_PATH
 video_path=../video   # path to the directory containing all the videos. In this example setup, we are linking all the videos to "../video"
 cluster_num=200        # the number of clusters in k-means. Note that 50 is by no means the optimal solution.
                       # You need to explore the best config by yourself.
-mkdir -p video sift kmeans
+mkdir -p frame video sift kmeans
 
 # This part does feature extraction, it may take quite a while if you have a lot of videos. Totally 3 steps are taken:
 # 1. Video pre-processing: You may use the provided ffmpeg tool to down-sample videos into images. 
@@ -32,7 +32,9 @@ cat list/train | awk '{print $1}' > list/train.video
 cat list/test | awk '{print $1}' > list/test.video
 cat list/train.video list/test.video > list/all.video
 for line in $(cat "list/all.video"); do
-    ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
+    #ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
+    mkdir -p frame/${line}
+    ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
 done
 # Great! We are done!
 echo "SUCCESSFUL COMPLETION"
