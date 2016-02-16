@@ -26,13 +26,23 @@ if __name__ == '__main__':
 
     for line in fread.readlines():
         video_id = line.replace('\n', '')
-        mfcc_path = "mfcc/" + video_id + ".mfcc.csv"
-        if os.path.exists(mfcc_path) is False:
+        frame_dir = "frame/" + video_id + "/"
+        if os.path.exists(frame_dir) is False:
             continue
-        X = numpy.genfromtxt(mfcc_path, delimiter=";")
-        labels = kmeans.predict(X)
-        counter = collections.Counter(labels)
-        vector = [counter[n] for n in xrange(cluster_num)]
+        vector = [0]*cluster_num
+        for sift_file in os.listdir(frame_dir):
+            if '.sift' not in sift_file:
+                continue
+            sift_id = sift_file.split('.sift')[0]
+
+            X = numpy.genfromtxt(frame_dir+sift_file, delimiter=";")
+            # if only one key point
+            if len(X.shape) == 1:
+                X = X.reshape(1, -1)
+            labels = kmeans.predict(X)
+            counter = collections.Counter(labels)
+            frame_vector = [counter[n] for n in xrange(cluster_num)]
+            vector = numpy.add(vector, frame_vector)
         s = numpy.sum(vector) + 0.0
         if s > 0:
             vector = vector/s
