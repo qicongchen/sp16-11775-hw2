@@ -37,13 +37,13 @@ cat list/train.video list/test.video > list/all.video
     #mkdir -p frame/${line}
     #ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
 #done
-python scripts/extract_sift.py list/all.video
+#python scripts/extract_sift.py list/all.video
 
-echo "Pooling SIFTs (optional)"
-python scripts/select_frames.py list/train.video 0.2 select.sift.csv || exit 1;
+#echo "Pooling SIFTs (optional)"
+#python scripts/select_frames.py list/train.video 0.2 select.sift.csv || exit 1;
 
-echo "Training the k-means model"
-python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
+#echo "Training the k-means model"
+#python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
 
 # Great! We are done!
 echo "SUCCESSFUL COMPLETION"
