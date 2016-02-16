@@ -10,6 +10,7 @@
 opensmile_path=/home/ubuntu/tools/openSMILE-2.1.0/bin/linux_x64_standalone_static
 speech_tools_path=/home/ubuntu/tools/speech_tools/bin
 ffmpeg_path=/home/ubuntu/tools/ffmpeg-2.2.4
+opencv_path=/home/ubuntu/tools/opencv-2.4.10
 export PATH=$opensmile_path:$speech_tools_path:$ffmpeg_path:$PATH
 export LD_LIBRARY_PATH=$ffmpeg_path/libs:$opensmile_path/lib:$LD_LIBRARY_PATH
 
@@ -37,5 +38,12 @@ cat list/train.video list/test.video > list/all.video
     #ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
 #done
 python scripts/extract_sift.py list/all.video
+
+echo "Pooling SIFTs (optional)"
+python scripts/select_frames.py list/train.video 0.2 select.sift.csv || exit 1;
+
+echo "Training the k-means model"
+python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
+
 # Great! We are done!
 echo "SUCCESSFUL COMPLETION"
