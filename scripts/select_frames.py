@@ -32,12 +32,16 @@ if __name__ == '__main__':
         for sift_file in os.listdir(frame_dir):
             if '.sift' not in sift_file:
                 continue
+            # if no key point, why an empty file??
             if os.stat(frame_dir+sift_file).st_size == 0:
                 os.remove(frame_dir+sift_file)
                 continue
             sift_id = sift_file.split('.sift')[0]
 
             array = numpy.genfromtxt(frame_dir+sift_file, delimiter=";")
+            # if only one key point
+            if len(array.shape) == 1:
+                continue
             numpy.random.shuffle(array)
             select_size = int(array.shape[0] * ratio)
             feat_dim = array.shape[1]
