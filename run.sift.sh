@@ -45,5 +45,9 @@ cat list/train.video list/test.video > list/all.video
 #echo "Training the k-means model"
 #python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
 
+echo "Creating k-means cluster vectors"
+python scripts/create_kmeans.py kmeans.${cluster_num}.model $cluster_num list/all.video || exit 1;
+
+
 # Great! We are done!
 echo "SUCCESSFUL COMPLETION"
