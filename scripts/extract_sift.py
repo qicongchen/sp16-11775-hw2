@@ -25,9 +25,11 @@ if __name__ == '__main__':
             img = cv2.imread(frame_dir+frame_file)
             gray = cv2.cvtColor(img, cv2.COLOR_BGR2GRAY)
 
-            sift = cv2.xfeatures2d.SIFT_create()
+            sift = cv2.SIFT()
             kp, des = sift.detectAndCompute(gray, None)
 
+            if des is None:
+                continue
             numpy.savetxt(frame_dir+frame_id+".sift", des, delimiter=';')
     fread.close()
 
