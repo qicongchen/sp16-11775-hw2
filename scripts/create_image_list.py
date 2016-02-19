@@ -27,4 +27,4 @@ if __name__ == '__main__':
     fread.close()
     fwrite.close()
 
-    print "Sift features extracted successfully!"
+    print "Image list extracted successfully!"
