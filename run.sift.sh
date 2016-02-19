@@ -33,9 +33,9 @@ cat list/train | awk '{print $1}' > list/train.video
 cat list/test | awk '{print $1}' > list/test.video
 cat list/train.video list/test.video > list/all.video
 for line in $(cat "list/all.video"); do
-    ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
-    mkdir -p frame/${line}
-    ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
+    #ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
+    mkdir -p frame/${line} sift/${line}
+    #ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
 done
 python scripts/extract_sift.py list/all.video
 
