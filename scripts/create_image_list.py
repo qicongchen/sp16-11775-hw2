@@ -23,7 +23,8 @@ if __name__ == '__main__':
             if '.jpeg' not in frame_file:
                 continue
             frame_id = frame_file.split('.jpeg')[0]
-            fwrite.write("%s\n" % frame_dir+frame_file)
+            image_path = frame_dir+frame_file
+            fwrite.write("%s\n" % image_path)
     fread.close()
     fwrite.close()
 
