@@ -32,18 +32,18 @@ mkdir -p frame video sift kmeans
 cat list/train | awk '{print $1}' > list/train.video
 cat list/test | awk '{print $1}' > list/test.video
 cat list/train.video list/test.video > list/all.video
-#for line in $(cat "list/all.video"); do
-    #ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
-    #mkdir -p frame/${line}
-    #ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
-#done
-#python scripts/extract_sift.py list/all.video
+for line in $(cat "list/all.video"); do
+    ffmpeg -y -ss 0 -i $video_path/${line}.mp4 -strict experimental -t 30 -r 15 -vf scale=160x120,setdar=dar=4/3 video/${line}.mp4
+    mkdir -p frame/${line}
+    ffmpeg -y -i video/${line}.mp4 -vsync 2 -vf select='eq(pict_type\,I)' -f image2 frame/${line}/%d.jpeg
+done
+python scripts/extract_sift.py list/all.video
 
-#echo "Pooling SIFTs (optional)"
-#python scripts/select_frames.py list/train.video 0.2 select.sift.csv || exit 1;
+echo "Pooling SIFTs (optional)"
+python scripts/select_frames.py list/train.video 0.2 select.sift.csv || exit 1;
 
-#echo "Training the k-means model"
-#python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
+echo "Training the k-means model"
+python scripts/train_kmeans.py select.sift.csv $cluster_num kmeans.${cluster_num}.model || exit 1;
 
 echo "Creating k-means cluster vectors"
 python scripts/create_kmeans.py kmeans.${cluster_num}.model $cluster_num list/all.video || exit 1;

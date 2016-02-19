@@ -16,6 +16,7 @@ if __name__ == '__main__':
     for line in fread.readlines():
         video_id = line.replace('\n', '')
         frame_dir = "frame/" + video_id + "/"
+        sift_dir = "sift/" + video_id + "/"
         if os.path.exists(frame_dir) is False:
             continue
         for frame_file in os.listdir(frame_dir):
@@ -30,7 +31,7 @@ if __name__ == '__main__':
 
             if des is None:
                 continue
-            numpy.savetxt(frame_dir+frame_id+".sift", des, delimiter=';')
+            numpy.savetxt(sift_dir+frame_id+".sift", des, delimiter=';')
     fread.close()
 
     print "Sift features extracted successfully!"

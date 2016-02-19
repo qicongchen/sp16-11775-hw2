@@ -26,20 +26,20 @@ if __name__ == '__main__':
 
     for line in fread.readlines():
         video_id = line.replace('\n', '')
-        frame_dir = "frame/" + video_id + "/"
-        if os.path.exists(frame_dir) is False:
+        sift_dir = "sift/" + video_id + "/"
+        if os.path.exists(sift_dir) is False:
             continue
         vector = [0]*cluster_num
-        for sift_file in os.listdir(frame_dir):
+        for sift_file in os.listdir(sift_dir):
             if '.sift' not in sift_file:
                 continue
             # if no key point, why an empty file??
-            if os.stat(frame_dir+sift_file).st_size == 0:
-                os.remove(frame_dir+sift_file)
+            if os.stat(sift_dir+sift_file).st_size == 0:
+                os.remove(sift_dir+sift_file)
                 continue
             sift_id = sift_file.split('.sift')[0]
 
-            X = numpy.genfromtxt(frame_dir+sift_file, delimiter=";")
+            X = numpy.genfromtxt(sift_dir+sift_file, delimiter=";")
             # if only one key point
             if len(X.shape) == 1:
                 X = X.reshape(1, -1)
